@@ -1,0 +1,7 @@
+{
+    "python.terminal.executeInFileDir": false,
+    "python.terminal.launchArgs": [
+        "2>/dev/null"
+    ],
+    "git.ignoreLimitWarning": true
+}
