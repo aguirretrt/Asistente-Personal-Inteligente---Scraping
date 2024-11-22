@@ -1,3 +1,4 @@
+import sounddevice # Al importar esta libreria desaparecen los mensajes de alertas de ALSA
 import speech_recognition as sr
 import subprocess
 import locale
@@ -32,6 +33,7 @@ class AudioDriver():
         Retorna:
         None
         """
+        
         self.texto_global = None
         self.codificacion = locale.getpreferredencoding()
 
@@ -101,7 +103,7 @@ class AudioDriver():
         elif self.texto_en_comando(COMANDOS_ACCION[1], comando):
             self.texto_a_audio("Bien, limpiaré tu pantalla")
             system("clear")
-            print(f'{rojo}Escuchando...{gris}')
+            print(f'{rojo}Escuchando...      {gris}')
             return None
         
         elif self.texto_en_comando(COMANDOS_ACCION[2], comando):
@@ -142,6 +144,9 @@ class AudioDriver():
         """
         if not self.stop_listening:
             try:
+                print(f'{azul2}Reconociendo voz...{gris}')
+                cursor_arriba()
+
                 transcripcion = recognizer.recognize_google(audio, language = 'es-AR')
 
                 activar = self.activar(transcripcion)
@@ -149,6 +154,11 @@ class AudioDriver():
                     self.texto_global = self.procesar_comando(transcripcion)
 
                     transcripcion = None
+
+                
+                print(f'{rojo2}Reconociendo voz...{gris}')
+                cursor_arriba()
+
             except Exception:
                 transcripcion = None # Si no reconoce el audio limpia la variable transcripcion
                 pass

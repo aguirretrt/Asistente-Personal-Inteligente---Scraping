@@ -31,7 +31,7 @@ if [[ "${arr_instalada[0]}" -ge "${arr_requerida[0]}" && \
   touch RunAsistente.sh
   echo "#!/bin/bash" > RunAsistente.sh
   echo "clear" > RunAsistente.sh
-  echo "python3 main.py 2>/dev/null" >> RunAsistente.sh
+  echo "python3 main.py" >> RunAsistente.sh
   chmod +x RunAsistente.sh
   ./RunAsistente.sh
 

@@ -1,5 +1,6 @@
 
-from os import environ
+from os import environ, path, listdir
+from shutil import rmtree
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
 
 from sys import exit
@@ -25,31 +26,31 @@ def main():
     """
     asistente = Asistente()
     asistente.ultima_conversacion()
-    texto_terminal = TextoTerminal()
+    
     audio_driver = AudioDriver()
-
+    texto_terminal = TextoTerminal()
     text = 'Buenas, para comunicarte conmigo debrás usar los siguientes comandos:'
     print(f'{verde}{text}\n{gris}')    
-    audio_driver.thread_texto_a_audio(text)
-
+ 
     for comando in COMANDOS_ACTIVACION:
+        text = text + ", " + comando
         print(f'{amarillo2}{comando}{gris}')
 
-    sleep(5)
-    text = 'Y para realizar algunas acciones debrá agregar las siguientes órdenes:'
-    print(f'{verde}\n{text}\n{gris}')    
-    audio_driver.thread_texto_a_audio(text)
-
+    text2 = 'Y para realizar algunas acciones, debrá agregar las siguientes órdenes:'
+    print(f'{verde}\n{text2}\n{gris}')    
+    
     for comando in COMANDOS_ACCION:
+        text2 = text2 + ", " + comando
         print(f'{amarillo2}{comando}{gris}')
 
-    print(f'{rojo}\nEscuchando...{gris}')
+    audio_driver.thread_texto_a_audio(text + ", " + text2)
+    print(f'{rojo}\nEscuchando...      {gris}')
 
-    #sleep(1) 
     tmp_texto = None
+   
     while True:
             voz = audio_driver.devolver_contenido()
-            texto = texto_terminal.texto_ingresado
+            texto = texto_terminal.obtener_texto()
             if voz or texto:
                 if len(texto.split()) > 20:
                     tmp_texto = ": " + texto
@@ -58,7 +59,7 @@ def main():
                     texto = None
 
                 comando = voz if voz else texto
-                texto_terminal.texto_ingresado = ''
+                #texto_terminal.texto_ingresado = ''
                 if tmp_texto and comando is not None:
                     comando = comando + tmp_texto
                     tmp_texto = None
@@ -82,12 +83,21 @@ def main():
                         # Envia la respuesta de texto a reproducir en audio
                         audio_driver.thread_texto_a_audio(respuesta)
 
-                print(f'{rojo}Escuchando...{gris}')
-            # else:
-            #     print(f'{rojo}Escuchando...{gris}')
-            #     cursor_arriba()
+                print(f'{rojo}Escuchando...      {gris}')
+
             sleep(1)  # Reducir la carga del CPU
+
+    # Metodo para eliminar carpetas temporales creadas por la aplicacion
+    for carpeta in listdir('/tmp'):
+        ruta_completa = path.join('/tmp', carpeta)
+        if path.isdir(ruta_completa) and (carpeta.startswith('.com.google') or carpeta.startswith('.org.chromium.')):
+            try:
+                rmtree(ruta_completa)
+            except:
+                pass
+
     exit()
 
 if __name__ == '__main__':
+    
     main()

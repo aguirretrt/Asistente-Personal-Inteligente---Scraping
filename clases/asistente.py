@@ -51,15 +51,25 @@ class Asistente():
         """
         print(f'\33[K{azul}Cargando Asistente...\n{gris}')  
         self.uc.Driver.get(self.url)
-        self.uc.Driver.wait.load_start()
+        self.uc.Driver.wait.load_start(timeout=2)
         #Login desde Cero
-        if self.uc.Driver.ele('css:[data-testid="login-button"]'):
-            self.uc.Driver.ele('css:[data-testid="login-button"]').click()
-            self.uc.Driver.ele('css:social-logo').click()
-            self.uc.Driver.ele('css:input[type="email"]',timeout=2).input(self.USER)
-            self.uc.Driver.ele('css:#identifierNext').click()
-            self.uc.Driver.ele('css:input[type="password"]',timeout=2).input(self.PASSWORD)
-            self.uc.Driver.ele('css:#passwordNext').click()
+        if self.uc.Driver.ele('css:[data-testid="login-button"]',timeout=2):
+            for i in range(5):
+                try:
+                    self.uc.Driver.ele('css:[data-testid="login-button"]').click()
+                    self.uc.Driver.ele('css:social-logo').click()
+                except:
+                    pass
+                try:
+                    self.uc.Driver.ele('css:input[type="email"]',timeout=5).input(self.USER)
+                    self.uc.Driver.ele('css:#identifierNext').click()
+                except:
+                    pass
+                try:
+                    self.uc.Driver.ele('css:input[type="password"]',timeout=5).input(self.PASSWORD)
+                    self.uc.Driver.ele('css:#passwordNext').click()
+                except:
+                    pass
 
         login = self.comprobar_login()
         # Verifica si se pudo logear correctamente
@@ -68,7 +78,7 @@ class Asistente():
         else:
             print(f'\33[K{azul}COOKIES: {rojo}FALLIDO{gris}')
 
-    def comprobar_login(self, tmpo=3):
+    def comprobar_login(self, tmpo=10):
         """
         Esta función verifica si el usuario ha iniciado sesión correctamente en la interfaz de chat de OpenAI. Intenta localizar un elemento específico en la página para verificar el estado de inicio de sesión. Si el inicio de sesión es exitoso, devuelve True. De lo contrario, devuelve False.
 
@@ -79,10 +89,11 @@ class Asistente():
         bool: Devuelve True si el inicio de sesión es exitoso, False en caso contrario.
         """
         login = False
-        while tmpo > 0:
+
+        for i in range(tmpo):
             try:
-                self.uc.Driver('css:[data-testid="profile-button"]')  
-                self.uc.Driver('css:#prompt-textarea').click()
+                self.uc.Driver.ele('css:[data-testid="profile-button"]',timeout=5)
+                self.uc.Driver.ele('css:#prompt-textarea').click()
                 login = True
                 break
             except:
@@ -96,26 +107,23 @@ class Asistente():
             except:
                 pass
             cursor_arriba()
-            print(f'\33[K{gris}Comprobando Login... {tmpo}{gris}')
+            print(f'\33[K{gris}Comprobando Login... {i}{gris}')
             sleep(1)
-            tmpo -= 1
+            
         cursor_arriba()
         print('\33[K')
         cursor_arriba(2)
         return login
 
-    def ultima_conversacion(self, tmpo=3):
+    def ultima_conversacion(self):
         """
         Esta función intenta hacer clic en el botón "Historial" en la interfaz de usuario para acceder a la última conversación. Si no se encuentra el botón "Historial" dentro del tiempo de espera especificado, imprime un mensaje indicando que no se encontró la última conversación.
-
-        Parámetros:
-        tmpo (int, opcional): El tiempo máximo (en segundos) para esperar a que el botón "Historial" sea clicable. Por defecto es 3 segundos.
 
         Retorna:
         Ninguno
         """
         try:
-            self.uc.Driver.ele('tx=Historial',  timeout=tmpo).click()            
+            self.uc.Driver.ele('tx=Historial',  timeout=5).click()            
         except:
             print(f'\33[K{amarillo}No se encontro Ultima Conversacion{gris}')
 

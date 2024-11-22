@@ -1,5 +1,6 @@
 from DrissionPage import ChromiumPage, ChromiumOptions
 from sbvirtualdisplay import Display
+from time import time
 
 from config import VISIBLE
 
@@ -28,6 +29,7 @@ class SeleniumDriver():
         self.Driver.set.window.full()
         
     def __del__(self):
-        self.Driver.quit()
+        #self.Driver.quit()
+        self.virtual_display.stop()
         self.virtual_display.stop()
     
