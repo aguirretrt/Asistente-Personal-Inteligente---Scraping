@@ -54,10 +54,3 @@ Asistente Personal Inteligente basado en tecnicas de Scraping
 
   Para finalizar la comunicación con el asistente, simplemente debe 
   decir: Asistente quiero finalizar.
-
-
-* Si usted ha tenido la oportunidad de probar el asistente le solicito su colaboracion
-  para responder el siguiente cuestionario, desde ya muchas gracias por su aporte.
-
-  https://docs.google.com/forms/d/e/1FAIpQLSeSaV_huefeyI0tIyYtqSa3klNjQGnqdegN7KUDKDugJncD5g/viewform?usp=pp_url
-  
